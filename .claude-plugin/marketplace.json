@@ -1,0 +1,25 @@
+{
+  "name": "romis",
+  "description": "romis 마켓플레이스 — 한국 SI / 온프레미스 환경 친화 DevOps 스킬 모음",
+  "owner": {
+    "name": "romis"
+  },
+  "plugins": [
+    {
+      "name": "si-devops",
+      "description": "개발 인프라(Bastion·GitLab·Nexus·Jenkins·보안·관측성·앱)를 단계적으로 구축하는 스킬 세트 | DevOps starter kit for Korean SI / on-prem environments",
+      "author": {
+        "name": "romis"
+      },
+      "category": "devops",
+      "tags": ["devops", "infrastructure", "gitlab", "jenkins", "nexus", "sonarqube", "prometheus", "korean-si", "on-prem"],
+      "source": {
+        "source": "github",
+        "repo": "romis9724/si-devops",
+        "path": "."
+      },
+      "homepage": "https://github.com/romis9724/si-devops",
+      "license": "MIT"
+    }
+  ]
+}
