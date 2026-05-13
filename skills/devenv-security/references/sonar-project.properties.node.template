@@ -1,0 +1,5 @@
+sonar.projectKey=node-service
+sonar.projectName=Node Service
+sonar.sources=src
+sonar.tests=test
+sonar.javascript.lcov.reportPaths=coverage/lcov.info

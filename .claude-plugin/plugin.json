@@ -1,0 +1,32 @@
+{
+  "name": "si-devops",
+  "version": "1.0.0",
+  "description": "개발 인프라(Bastion·GitLab·Nexus·Jenkins·보안·관측성·앱)를 단계적으로 구축하는 스킬 세트 | DevOps starter kit for Korean SI / on-prem environments (Bastion, GitLab, Nexus, Jenkins, security, observability, app)",
+  "author": {
+    "name": "romis"
+  },
+  "license": "MIT",
+  "skills": [
+    {
+      "name": "devenv-core",
+      "path": "skills/devenv-core/SKILL.md"
+    },
+    {
+      "name": "devenv-security",
+      "path": "skills/devenv-security/SKILL.md"
+    },
+    {
+      "name": "devenv-observe",
+      "path": "skills/devenv-observe/SKILL.md"
+    },
+    {
+      "name": "devenv-app",
+      "path": "skills/devenv-app/SKILL.md"
+    },
+    {
+      "name": "devenv-common",
+      "path": "skills/devenv-common/SKILL.md",
+      "internal": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+# 개발 기본값 — 유효한 Alertmanager 설정(기동용). 실제 알림은 전송되지 않습니다.
+# 운영(Slack/메일 등): references/alertmanager-config.yml 를 참고해 이 파일을 교체하거나 마운트를 바꿉니다.
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: noop
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: noop
+    webhook_configs:
+      - url: http://127.0.0.1:9/
+        send_resolved: false

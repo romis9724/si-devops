@@ -1,0 +1,5 @@
+sonar.projectKey=frontend
+sonar.projectName=Frontend
+sonar.sources=src
+sonar.tests=src
+sonar.test.inclusions=**/*.test.tsx,**/*.test.ts

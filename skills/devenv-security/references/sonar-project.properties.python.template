@@ -1,0 +1,5 @@
+sonar.projectKey=python-service
+sonar.projectName=Python Service
+sonar.sources=src
+sonar.tests=tests
+sonar.python.coverage.reportPaths=coverage.xml

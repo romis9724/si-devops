@@ -1,0 +1,44 @@
+# 운영용 알림 라우팅 예시. 개발 기본 스택은 templates/configs/alertmanager/alertmanager.yml(noop)을 씁니다.
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: slack-default
+  group_by: ["alertname", "service", "project"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 2h
+  routes:
+    - matchers:
+        - severity="critical"
+      receiver: slack-default
+      repeat_interval: 30m
+    - matchers:
+        - severity="warning"
+      receiver: email-default
+      repeat_interval: 2h
+
+inhibit_rules:
+  - source_matchers:
+      - severity="critical"
+    target_matchers:
+      - severity="warning"
+    equal: ["alertname", "service", "instance"]
+
+receivers:
+  - name: slack-default
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/REPLACE/ME"
+        channel: "#alerts"
+        send_resolved: true
+        title: "[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}"
+        text: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+
+  - name: email-default
+    email_configs:
+      - to: "ops@example.com"
+        from: "alertmanager@example.com"
+        smarthost: "smtp.example.com:587"
+        auth_username: "alertmanager@example.com"
+        auth_password: "REPLACE_ME"
+        require_tls: true

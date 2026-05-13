@@ -1,0 +1,12 @@
+# Claude Code session state
+.claude/
+
+# Runtime secrets (never commit)
+*.env
+!*.env.example
+secrets/
+!secrets/*.example
+
+# OS / IDE
+.DS_Store
+Thumbs.db

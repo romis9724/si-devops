@@ -1,0 +1,5 @@
+sonar.projectKey=backend
+sonar.projectName=Backend
+sonar.sources=src/main/java
+sonar.tests=src/test/java
+sonar.java.binaries=build/classes

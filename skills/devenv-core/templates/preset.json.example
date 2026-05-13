@@ -1,0 +1,225 @@
+{
+  "_comment": "devenv preset.json — 4개 스킬이 공유하는 상태 파일 스키마 예시. 실제 파일은 ${DEVENV_HOME}/preset.json 위치에 생성됩니다.",
+  "schema": "devenv-core/preset/v1",
+  "generated_at": "2026-01-01T00:00:00+09:00",
+  "scope": "core",
+
+  "project_name": "{PROJECT_NAME}",
+  "os_type": "ubuntu22",
+  "compose_mode": "single",
+  "internal_network": "10.0.1.0/24",
+  "domain": "",
+  "timezone": "Asia/Seoul",
+  "ssl_type": "none",
+  "ssh_via_bastion": "y",
+  "team_size": "5",
+  "port_offset": 0,
+
+  "ips": {
+    "bastion": "10.0.1.10",
+    "gitlab":  "10.0.1.11",
+    "nexus":   "10.0.1.12",
+    "jenkins": "10.0.1.13"
+  },
+  "host_ports": {
+    "bastion_ssh":    2222,
+    "gitlab_http":    8082,
+    "gitlab_ssh":     2223,
+    "jenkins":        8080,
+    "nexus_ui":       8081,
+    "nexus_registry": 5000
+  },
+  "host": {
+    "platform":    "windows-wsl2",
+    "wsl_distro":  "Ubuntu-22.04",
+    "wsl_user":    "ubuntu",
+    "install_dir": "/home/ubuntu/devenv-{PROJECT_NAME}"
+  },
+  "versions": {
+    "gitlab_ce":     "17.11.7-ce.0",
+    "nexus":         "3.78.2",
+    "gitlab_ce_sha": "",
+    "nexus_sha":     ""
+  },
+  "next_suggestions": ["devenv-security", "devenv-app", "devenv-observe"],
+  "credentials": {
+    "admin_password_storage": "/home/ubuntu/devenv-{PROJECT_NAME}/config.env (chmod 600)",
+    "jenkins_admin_user": "admin"
+  },
+
+  "observe": {
+    "metrics": "prometheus-grafana",
+    "logging": "loki",
+    "apm":     "skywalking",
+    "monitoring_ip":  "127.0.0.1",
+    "install_dir":    "/home/ubuntu/devenv-{PROJECT_NAME}/monitoring",
+    "compose_file":   "/home/ubuntu/devenv-{PROJECT_NAME}/monitoring/docker-compose.yml",
+    "ports": {
+      "prometheus":          9090,
+      "grafana":             3001,
+      "loki":                3100,
+      "promtail":            9080,
+      "node_exporter":       9100,
+      "cadvisor":            8088,
+      "skywalking_ui":       8079,
+      "skywalking_oap_grpc": 11800,
+      "skywalking_oap_http": 12800
+    },
+    "credentials": {
+      "grafana_admin_user":            "admin",
+      "grafana_admin_password_source": "ADMIN_SHARED_PASSWORD in config.env"
+    },
+    "scrape_targets": [
+      "prometheus", "grafana", "loki", "promtail",
+      "node-exporter", "cadvisor", "skywalking-oap",
+      "jenkins", "gitlab", "gitlab-exporter", "gitlab-workhorse", "nexus"
+    ],
+    "dashboards": [
+      "node-exporter-full", "docker-host-and-containers", "cadvisor-exporter",
+      "jenkins-performance", "gitlab-omnibus", "loki-logs",
+      "prometheus-stats", "devenv-overview"
+    ],
+    "skywalking_agent": {
+      "version": "9.4.0",
+      "path": "/home/ubuntu/devenv-{PROJECT_NAME}/monitoring/skywalking-agent",
+      "registered_services": []
+    },
+    "installed_at": null,
+    "profile": "stable-2026q2"
+  },
+
+  "security": {
+    "schema":      "devenv-security/preset/v1",
+    "installed_at": null,
+    "run_profile": "post-app",
+    "server_ip":   "10.0.1.21",
+    "install_dir": "/home/ubuntu/devenv-{PROJECT_NAME}/security",
+    "compose_file":"/home/ubuntu/devenv-{PROJECT_NAME}/security/docker-compose.security.yml",
+    "network":     "devenv-internal",
+    "sonarqube": {
+      "enabled":   true,
+      "version":   "10.4.1.88267",
+      "image":     "sonarqube:10.4-community",
+      "container": "sonarqube-{PROJECT_NAME}",
+      "internal_url": "http://sonarqube:9000",
+      "host_url":     "http://localhost:9000",
+      "ip":   "10.0.1.21",
+      "port": 9000,
+      "admin_user":             "admin",
+      "admin_password_source":  "ADMIN_SHARED_PASSWORD in config.env",
+      "jenkins_token_file":     "/home/ubuntu/devenv-{PROJECT_NAME}/security/.sonar_jenkins_token (chmod 600)",
+      "db": {
+        "image":     "postgres:15-alpine",
+        "container": "sonar-db-{PROJECT_NAME}",
+        "ip":        "10.0.1.20"
+      }
+    },
+    "owasp_zap": {
+      "enabled":         true,
+      "version":         "2.17.0",
+      "image":           "zaproxy/zap-stable:2.17.0",
+      "container":       "zap-{PROJECT_NAME}",
+      "ip":              "10.0.1.22",
+      "port":            8090,
+      "api_key_disabled": true,
+      "host_url":        "http://localhost:8090"
+    },
+    "trivy": {
+      "enabled":         true,
+      "version":         "0.70.0",
+      "install_method":  "apt (host)",
+      "binary":          "/usr/bin/trivy",
+      "offline_mode":    false,
+      "registry_target": "127.0.0.1:5000"
+    },
+    "dependency_check": {
+      "enabled":         true,
+      "version":         "9.0.9",
+      "install_method":  "jenkins-plugin",
+      "tool_name":       "dep-check",
+      "nvd_api_key":     ""
+    },
+    "jenkins_integration": {
+      "credentials": {
+        "sonar_token_id": "sonarqube-token"
+      },
+      "sonar_server_name":  "SonarQube",
+      "sonar_scanner_tool": "SonarScanner",
+      "depcheck_tool":      "dep-check",
+      "plugins_installed": [
+        "sonar", "dependency-check-jenkins-plugin", "docker-workflow",
+        "workflow-aggregator", "git", "credentials-binding",
+        "htmlpublisher", "pipeline-stage-view", "config-file-provider",
+        "pipeline-utility-steps", "http_request"
+      ],
+      "quality_gate_mode": "warn",
+      "linked_jobs": []
+    },
+    "templates": {
+      "jenkinsfile_security": "/home/ubuntu/devenv-{PROJECT_NAME}/security/references/Jenkinsfile.security.template"
+    }
+  },
+
+  "app": {
+    "schema":          "devenv-app/preset/v1",
+    "savedAt":         null,
+    "appType":         ["web", "admin"],
+    "backend":         "spring-boot",
+    "backendVersion":  "3.2.5",
+    "frontend":        "react-vite",
+    "admin":           "react-vite",
+    "db":              "mysql-8.0",
+    "branchStrategy":  "gitflow",
+    "sampleApp":       "full",
+    "ports": {
+      "db":       3306,
+      "backend":  8083,
+      "frontend": 3000,
+      "admin":    3101
+    },
+    "ips": {
+      "mysql":    "10.0.1.30",
+      "backend":  "10.0.1.31",
+      "frontend": "10.0.1.32",
+      "admin":    "10.0.1.33"
+    },
+    "installDir":  "/home/ubuntu/devenv-{PROJECT_NAME}/app",
+    "composeFile": "/home/ubuntu/devenv-{PROJECT_NAME}/app/docker-compose.app.yml",
+    "gitlab": {
+      "group": "{PROJECT_NAME}",
+      "repos": {
+        "backend":  "http://localhost:8082/{PROJECT_NAME}/backend",
+        "frontend": "http://localhost:8082/{PROJECT_NAME}/frontend",
+        "admin":    "http://localhost:8082/{PROJECT_NAME}/admin"
+      }
+    },
+    "jenkins": {
+      "jobs": {
+        "backend":  "http://localhost:8080/job/{PROJECT_NAME}-backend",
+        "frontend": "http://localhost:8080/job/{PROJECT_NAME}-frontend",
+        "admin":    "http://localhost:8080/job/{PROJECT_NAME}-admin"
+      }
+    },
+    "nexus": {
+      "registry":   "127.0.0.1:5000",
+      "dockerRepo": "docker-hosted"
+    },
+    "detectedSkills": {
+      "security":   false,
+      "observe":    false,
+      "observeApm": ""
+    },
+    "seedUsers": {
+      "admin": "admin/admin123 (ADMIN)",
+      "demo":  "demo/demo123 (USER)"
+    },
+    "phaseProgress": {
+      "gitlab":  { "backend": "", "frontend": "", "admin": "" },
+      "jenkins": { "backend": "", "frontend": "", "admin": "" },
+      "builds":  { "backend": "", "frontend": "", "admin": "" },
+      "deploy":  { "backend": "", "frontend": "", "admin": "" },
+      "smoke":   { "backend": "", "frontend": "", "admin": "" }
+    },
+    "knownIssues": []
+  }
+}
